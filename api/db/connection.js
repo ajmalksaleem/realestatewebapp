@@ -1,15 +1,5 @@
 import { connect } from 'mongoose';
 
-// const connectToDatabase = () => {
-
-//     return connect(process.env.MONGO_URL)
-//         .then(() => {
-//             console.log('mongodb connected succesfully');
-//         }).catch((err) => {
-//             console.log(err)
-//         });
-
-// };
 
 const connectToDatabase = async () => {
     try {
