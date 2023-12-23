@@ -2,13 +2,15 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
+import OAuth from '../Components/OAuth';
 
 
 const Signin = () => {
 
     const [formData, setformData] = useState({});
-    const { loading, error } = useSelector((state) => state.user)  //error and loading are used below html code
+    const { loading, error } = useSelector((state) => state.user)  //error and loading are used below html code, user: slice name in userslicer
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleChange = (ev) => {
         setformData({
@@ -20,8 +22,8 @@ const Signin = () => {
     const handleSubmit = async (ev) => {
         ev.preventDefault()
         try {
-            //setLoading(false)
-            useDispatch(signInStart())
+            //setLoading(true)
+            dispatch(signInStart())
             const res = await fetch('/api/auth/signin',
                 {
                     method: 'POST',
@@ -34,17 +36,17 @@ const Signin = () => {
             if (data.success === false) {
                 // setLoading(false)
                 // setError(data.message);
-                useDispatch(signInFailure(data.message))
+                dispatch(signInFailure(data.message))
                 return
             }
             // setLoading(false)
             // setError(null)
-            useDispatch(signInSuccess(data))
+            dispatch(signInSuccess(data))
             navigate('/')
         } catch (error) {
             // setLoading(false)
             // setError(error.message)
-            useDispatch(signInFailure(error.message))
+            dispatch(signInFailure(error.message))
         }
 
 
@@ -62,6 +64,7 @@ const Signin = () => {
                     className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-85'>
                     {loading ? 'Loading...' : "Sign In"}
                 </button>
+                <OAuth />
             </form>
             <div className="flex gap-1 mt-2">
                 <p>havnt yet registered?</p>
