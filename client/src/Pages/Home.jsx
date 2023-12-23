@@ -1,10 +1,21 @@
+import axios from 'axios'
 import React from 'react'
+import { useDispatch } from 'react-redux'
+
+import { signInSuccess } from '../redux/user/userSlice'
 
 const Home = () => {
+    const dispatch = useDispatch()
+    const logout = () => {
+        const res = axios.post('/api/auth/logout')
+        const data = res.data;
+        dispatch(signInSuccess(null))
+    }
     return (
         <div>
-            Homevvvvvvvvvvvv
-            <h1>gjjjkfbvkdhjds</h1>
+            Home
+            <button onClick={logout}>logout thalkal</button>
+
         </div>
     )
 }
