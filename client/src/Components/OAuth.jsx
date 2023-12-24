@@ -16,18 +16,6 @@ const OAuth = () => {
             const auth = getAuth(app)
             const result = await signInWithPopup(auth, provider)
 
-            // const res = await fetch('/api/auth/google', {
-            //     method: 'POST',
-            //     headers: {
-            //         'content-type': 'application/json'
-            //     },
-            //     body: JSON.stringify({
-            // name: result.user.displayName,
-            // email: result.user.email,
-            // photo: result.user.photoURL
-            //     })
-            // });
-            // const data = await res.json()
             const res = await axios.post('/api/auth/google', {
                 name: result.user.displayName,
                 email: result.user.email,
