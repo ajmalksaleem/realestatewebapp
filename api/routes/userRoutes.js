@@ -1,9 +1,11 @@
 import { Router } from "express";
-import { test } from "../controllers/user-controller.js";
+import { deleteUser, updateUser } from "../controllers/user-controller.js";
+import { verifyUser } from "../utils/verifyUser.js";
 
 
 const userRoute = Router()
 
-userRoute.get('/', test)
+userRoute.post('/update/:id', verifyUser, updateUser)
+userRoute.delete('/delete/:id', verifyUser, deleteUser)
 
 export default userRoute;

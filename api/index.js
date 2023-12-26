@@ -4,9 +4,11 @@ import { config } from 'dotenv';
 import connectToDatabase from './db/connection.js';
 import userRoute from './routes/userRoutes.js';
 import authRoute from './routes/authRoute.js';
+import cookieParser from 'cookie-parser';
 config()
 
 app.use(express.json());
+app.use(cookieParser());
 app.use("/api/user", userRoute);
 app.use("/api/auth", authRoute);
 

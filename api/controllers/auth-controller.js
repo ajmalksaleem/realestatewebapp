@@ -31,7 +31,7 @@ export const signin = async (req, res, next) => {
         next(error)
     }
 
-}
+};
 
 export const googleSignIn = async (req, res, next) => {
     try {
@@ -52,10 +52,18 @@ export const googleSignIn = async (req, res, next) => {
             res.cookie('access_token', token, { httpOnly: true, maxAge: 48 * 60 * 60 * 1000 });
             const { password, ...rest } = newUser._doc
             res.status(200).json(rest);
-
         }
     } catch (error) {
         next(error)
     }
+};
 
+export const signOut = (req, res, next) => {
+    try {
+        res.clearCookie('access_token');
+        res.status(200).json('user has been signed out')
+
+    } catch (error) {
+        next(error)
+    }
 }
