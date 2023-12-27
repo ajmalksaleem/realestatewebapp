@@ -10,6 +10,7 @@ import {
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom'
 
 
 const Profile = () => {
@@ -44,7 +45,7 @@ const Profile = () => {
             },
             (error) => {
                 setfileUploadError(true);
-                console.log(error)                                      //Firebase Storage events like state_changed provide a mechanism for handling errors within a specific context, rather than using more general try...catch blocks. 
+                console.log(error)                                          //Firebase Storage events like state_changed provide a mechanism for handling errors within a specific context, rather than using more general try...catch blocks. 
             },                                                                     // here a number of callbacks connected with 'state-changed' are used , 1st snapshot, 2nd error , 3rd ..etc seperated by commas
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -122,7 +123,6 @@ const Profile = () => {
         }
     }
 
-
     return (
         <div className="p-4 max-w-lg mx-auto">
             <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -147,6 +147,7 @@ const Profile = () => {
                 <input id="email" defaultValue={currentUser.email} type="text" onChange={handleChange} placeholder="Email" className="border p-4 rounded-lg" />
                 <input id="password" type="text" placeholder="Password" onChange={handleChange} className="border p-4 rounded-lg" />
                 <button disabled={loading} className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-85">{loading ? 'Loading' : "Update"}</button>
+                <Link to={'/create-listing'} className="bg-green-700 text-center p-3 text-white uppercase rounded-lg hover:opacity-85">Create Listing</Link>
             </form>
             <div>
                 {error && <p className="text-red-500 text-sm">{updateerror}</p>}

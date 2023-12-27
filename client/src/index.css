@@ -7,3 +7,31 @@ body {
     background-color: rgb(241, 245,
             241)
 }
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="tel"],
+textarea {
+    @apply outline-none rounded-lg;
+}
+
+;
+
+
+/* Spinner styles */
+.spinner {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    border: 2px solid rgb(255, 255, 255);
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

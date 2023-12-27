@@ -5,12 +5,14 @@ import connectToDatabase from './db/connection.js';
 import userRoute from './routes/userRoutes.js';
 import authRoute from './routes/authRoute.js';
 import cookieParser from 'cookie-parser';
+import listingRouter from './routes/listingRoute.js';
 config()
 
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/user", userRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/listing", listingRouter)
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
