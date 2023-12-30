@@ -10,7 +10,7 @@ import {
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom'
+import ProfileNav from "../Components/ProfileNav";
 
 
 const Profile = () => {
@@ -124,41 +124,47 @@ const Profile = () => {
     }
 
     return (
-        <div className="p-4 max-w-lg mx-auto">
-            <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
-            <form className="flex flex-col gap-4" onSubmit={handleUpdate}>
-                <input onChange={(e) => setFile(e.target.files[0])} type="file" ref={fileRef} hidden accept="image/*" />
-                <div className="relative self-center">
-                    <img src={formData.avatar || currentUser.avatar} alt=""                                              //When the image is clicked, it calls the click() method on the hidden file input (fileRef.current), effectively opening the file selection dialog.
-                        className="rounded-full h-24 w-24 object-cover cursor-pointer mt-2 self-center" />
-                    <div
-                        className="absolute inset-0 rounded-full mt-2 opacity-0 transition-opacity duration-300 bg-black bg-opacity-50 hover:opacity-100"
-                    ><FaCameraRetro onClick={() => fileRef.current.click()} className="w-6 h-6 text-white mx-auto my-9 " />
+        <>
+            <div className='max-w-lg mx-auto'>
+                <ProfileNav />
+            </div>
+
+            <div className="p-4 max-w-lg mx-auto">
+                <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
+                <form className="flex flex-col gap-4" onSubmit={handleUpdate}>
+                    <input onChange={(e) => setFile(e.target.files[0])} type="file" ref={fileRef} hidden accept="image/*" />
+                    <div className="relative self-center">
+                        <img src={formData.avatar || currentUser.avatar} alt=""                                              //When the image is clicked, it calls the click() method on the hidden file input (fileRef.current), effectively opening the file selection dialog.
+                            className="rounded-full h-24 w-24 object-cover cursor-pointer mt-2 self-center" />
+                        <div onClick={() => fileRef.current.click()}
+                            className="absolute inset-0 rounded-full mt-2 opacity-0 transition-opacity duration-300 bg-black bg-opacity-50 hover:opacity-100"
+                        ><FaCameraRetro className="w-6 h-6 text-white mx-auto my-9 " />
+                        </div>
                     </div>
+                    <p className="text-center text-sm">
+                        {fileUploadError ?
+                            <span className="text-red-700">Error Image Upload (image must be less than 2mb)</span>
+                            : filePercentage > 0 && filePercentage < 100 ? <span className="text-slate-700">{`Uploading ${filePercentage}%`}</span>
+                                : filePercentage === 100 ? <span className="text-green-700">Image Successfully Uploaded</span>
+                                    : ''}
+                    </p>
+                    <input id="username" defaultValue={currentUser.username} onChange={handleChange} type="text" placeholder="Username" className="border p-4 rounded-lg" />
+                    <input id="email" defaultValue={currentUser.email} type="text" onChange={handleChange} placeholder="Email" className="border p-4 rounded-lg" />
+                    <input id="password" type="text" placeholder="Password" onChange={handleChange} className="border p-4 rounded-lg" />
+                    <button disabled={loading} className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-85">{loading ? 'Loading' : "Update"}</button>
+
+                </form>
+                <div>
+                    {error && <p className="text-red-500 text-sm">{updateerror}</p>}
+
                 </div>
-                <p className="text-center text-sm">
-                    {fileUploadError ?
-                        <span className="text-red-700">Error Image Upload (image must be less than 2mb)</span>
-                        : filePercentage > 0 && filePercentage < 100 ? <span className="text-slate-700">{`Uploading ${filePercentage}%`}</span>
-                            : filePercentage === 100 ? <span className="text-green-700">Image Successfully Uploaded</span>
-                                : ''}
-                </p>
-                <input id="username" defaultValue={currentUser.username} onChange={handleChange} type="text" placeholder="Username" className="border p-4 rounded-lg" />
-                <input id="email" defaultValue={currentUser.email} type="text" onChange={handleChange} placeholder="Email" className="border p-4 rounded-lg" />
-                <input id="password" type="text" placeholder="Password" onChange={handleChange} className="border p-4 rounded-lg" />
-                <button disabled={loading} className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-85">{loading ? 'Loading' : "Update"}</button>
-                <Link to={'/create-listing'} className="bg-green-700 text-center p-3 text-white uppercase rounded-lg hover:opacity-85">Create Listing</Link>
-            </form>
-            <div>
-                {error && <p className="text-red-500 text-sm">{updateerror}</p>}
 
+                <div className="flex justify-between mt-5">
+                    <span onClick={handleDelete} className="text-red-700 cursor-pointer">Delete Account</span>
+                    <span onClick={handleSignout} className="text-red-700 cursor-pointer">Sign Out</span>
+                </div>
             </div>
-
-            <div className="flex justify-between mt-5">
-                <span onClick={handleDelete} className="text-red-700 cursor-pointer">Delete Account</span>
-                <span onClick={handleSignout} className="text-red-700 cursor-pointer">Sign Out</span>
-            </div>
-        </div>
+        </>
     )
 }
 
