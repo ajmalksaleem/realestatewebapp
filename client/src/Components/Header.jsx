@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 const Header = () => {
     const { currentUser } = useSelector(state => state.user) // in redux it is like currentUser={name,email...}
     return (
-        <header className='bg-slate-200 shadow-md'>
+        <header className='bg-slate-200 '>
             <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
                 <Link to={'/'}>
                     <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
@@ -22,7 +22,7 @@ const Header = () => {
                     <Link to={'/'} className='hidden sm:inline hover:underline'>Home</Link>
                     <Link to={'/about'} className='hidden sm:inline hover:underline'>About</Link>
                     {currentUser ? (
-                        <Link to={'/profile'}><img src={currentUser.avatar} alt="" className='rounded-full h-7 object-cover' /></Link>
+                        <Link to={'/profile'}><img src={currentUser.avatar} alt="img" className='rounded-full h-7 w-7 object-cover' /></Link>
                     ) : <Link to={'/sign-in'} className='hover:underline'>Sign in</Link>}
 
                 </ul>

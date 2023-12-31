@@ -1,13 +1,16 @@
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { app } from '../firebase';
 import Axios from 'axios'
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ProfileNav from '../Components/ProfileNav';
 
 
 const CreateListing = () => {
+
+    const listingId = useParams().id
+
     const [files, setFiles] = useState([]);
     const [imageUploadError, setimageUploadError] = useState('');
     const [uploading, setUploading] = useState(false);
@@ -31,6 +34,25 @@ const CreateListing = () => {
 
     const { currentUser } = useSelector(state => state.user)
     const navigate = useNavigate()
+
+    useEffect(() => {
+        const listData = async () => {
+            try {
+                if (!listingId) return;
+                const res = await Axios.get(`/api/listing/list/${listingId}`);
+                const { data } = res;
+                setformData(data)
+                return
+            } catch (error) {
+                if (error.response) {
+                    console.log(error.response.data.message);
+                } else {
+                    console.log(error.message);
+                }
+            }
+        }
+        listData();
+    }, [listingId]);
 
     const handleImageSubmit = () => {
         setUploading(true);
@@ -99,14 +121,23 @@ const CreateListing = () => {
             if (+formData.regularPrice < +formData.discountPrice) return setError('Discount price must be lower than Regular Price')
             setLoading(true);
             setError(false)
-            const res = await Axios.post('/api/listing/create', {
-                ...formData, userRef: currentUser._id
-            })
-            const data = res.data;
+            if (listingId) {
+                const res = Axios.put(`/api/listing/update/${listingId}`, {
+                    ...formData, userRef: currentUser._id
+                })
+                setLoading(false);
+                navigate(`/view-listings`)
 
-            setLoading(false);
-            navigate(`/listing/${data._id}`)
+            } else {
+                const res = await Axios.post('/api/listing/create', {
+                    ...formData, userRef: currentUser._id
+                })
+                const data = res.data;
 
+                setLoading(false);
+                navigate(`/listing/${data._id}`)
+
+            };
         } catch (error) {
             if (error.response) {
                 // Custom error with status code
@@ -123,11 +154,12 @@ const CreateListing = () => {
 
     return (
         <>
-            <div className='max-w-lg mx-auto'>
+            {!listingId && <div className='max-w-lg mx-auto'>
                 <ProfileNav />
-            </div>
+            </div>}
             <main className='p-6 max-w-4xl mx-auto'>
-                <h1 className='text-3xl font-semibold text-center mb-7 mt-4'>Create a listing</h1>
+                <h1 className='text-3xl font-semibold text-center mb-7 mt-4'>
+                    {listingId ? "Update a listing" : "Create a listing"} </h1>
                 <form onSubmit={handleSubmit} className='flex flex-col  md:flex-row gap-6'>
                     <div className='flex flex-col gap-4 flex-1'>
                         <input
@@ -295,7 +327,7 @@ const CreateListing = () => {
                         }
 
                         <button disabled={loading || uploading} className='p-3 flex justify-center items-center gap-2 bg-gray-700 text-white uppercase rounded-lg hover:opacity-85 disabled:bg-gray-400'>
-                            {loading ? "creating " : 'create listing'}
+                            {listingId ? "Update listing" : loading ? "creating " : 'create listing'}
                             {loading && <div className="spinner" />}
                         </button>
                         {error && <p className='text-red-700 text-sm'>{error}</p>}

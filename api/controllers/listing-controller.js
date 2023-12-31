@@ -34,9 +34,22 @@ export const updateListing = async (req, res, next) => {
             req.body,
             { new: true }
         )
-        res.status(200).json(updatedListin)
+        res.status(200).json(updatedListing)
     } catch (error) {
         next(error)
     }
+};
+
+export const getList = async (req, res, next) => {
+    try {
+        const listing = await Listing.findById(req.params.id)
+        if (!listing) return next(errorHandler(404, 'Listing not found'))
+        if (req.user.id !== listing.userRef) return next(errorHandler(401, 'You can only delete your own listing'))
+        res.status(200).json(listing)
+    } catch (error) {
+        next(error)
+    }
+
+
 }
 

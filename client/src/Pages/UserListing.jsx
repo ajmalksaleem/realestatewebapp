@@ -2,21 +2,25 @@ import axios from 'axios'
 import ProfileNav from '../Components/ProfileNav'
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 const UserListing = () => {
+
+    const navigate = useNavigate()
     const { currentUser } = useSelector(state => state.user)
     const [userListings, setuserListings] = useState([]);
+
 
     useEffect(() => {
         const getUserListings = async () => {
             const res = await axios.get(`api/user/listings/${currentUser._id}`)
             const { data } = res;
             setuserListings(data);
+            return
         };
         getUserListings();
-    }, []);
+    }, [userListings]);
 
     const handleListingDelete = async (id) => {
         try {
@@ -24,7 +28,7 @@ const UserListing = () => {
             const res = await axios.delete(`/api/listing/delete/${id}`)
             const data = res.data;
             toast.success('Listing Deleted')
-            setuserListings((prev) => prev.filter((listing) => listing._id !== id))
+            // setuserListings((prev) => prev.filter((listing) => listing._id !== id))
         } catch (error) {
             if (error.response) {
                 // Custom error with status code
@@ -36,6 +40,10 @@ const UserListing = () => {
         }
     };
 
+
+    const handleListingedit = async (id) => {
+        navigate(`/editlisting/${id}`)
+    }
 
     return (
         <>
@@ -54,7 +62,7 @@ const UserListing = () => {
                         </Link>
                         <div className='flex flex-col'>
                             <button onClick={() => handleListingDelete(userlist._id)} className='hover:text-red-700 '>DELETE</button>
-                            <button className='hover:text-green-700 '>EDIT</button>
+                            <button onClick={() => handleListingedit(userlist._id)} className='hover:text-green-700 '>EDIT</button>
                         </div>
                     </div>
                 ))
