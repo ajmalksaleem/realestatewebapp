@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css/bundle'
 import { FaMapMarkerAlt, FaBed, FaBath, FaParking, FaChair } from "react-icons/fa";
 import { IoShareSocialSharp } from "react-icons/io5";
+import { useSelector } from 'react-redux'
+import Contact from '../Components/Contact';
 
 const Listing = () => {
     const listingId = useParams().id;
     SwiperCore.use([Navigation, Pagination, Autoplay]);
+    const { currentUser } = useSelector(state => state.user)
+    const navigate = useNavigate()
 
     const [listingData, setlistingData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [copied, setCopied] = useState(false);
-
+    const [contact, setcontact] = useState(false);
+    const [navigates, setnavigates] = useState(false);
 
     useEffect(() => {
         const listData = async () => {
@@ -83,7 +88,7 @@ const Listing = () => {
                     {copied && (
                         <p className='fixed top-[16.6%] right-[11%] md:right-[6%] lg:right-[5%] bg-slate-100 px-2 py-0.5 rounded-md z-10 '>Link Copied</p>
                     )}
-                    <div className='flex flex-col my-7 max-w-4xl mx-auto p-3 gap-4'>
+                    <div className='flex flex-col my-7 max-w-6xl mx-auto p-3 gap-4'>
                         <p className='text-2xl font-semibold'>
                             {listingData.name} - ${''}
                             {listingData.offer ? listingData.discountPrice.toLocaleString('en-US')   //It formats the price number according to US conventions, which typically includes:Using commas as thousands separators (e.g., 1,234.56).Placing two decimal places for currencies (e.g., $12.34).
@@ -123,6 +128,16 @@ const Listing = () => {
                                 {listingData.furnished ? 'Furnished' : "Unfurnished"}
                             </li>
                         </ul>
+                        {currentUser ? listingData.userRef !== currentUser._id && !contact && (
+
+                            <button onClick={() => setcontact(true)} className='bg-slate-700 text-white p-3 rounded-lg hover:opacity-85 mt-5 uppercase '>Contact Landlort</button>
+                        ) : <button onClick={() => setnavigates(true)} className='bg-slate-700 text-white p-3 rounded-lg hover:opacity-85 mt-5 uppercase '>Contact Landlord</button>}
+                        {contact && (
+                            <Contact listingData={listingData} />
+                        )}
+                        {navigates && (
+                            navigate('/sign-in')
+                        )}
                     </div>
                 </>
             )}
