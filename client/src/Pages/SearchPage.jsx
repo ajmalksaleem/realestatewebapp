@@ -7,6 +7,7 @@ const SearchPage = () => {
     const navigate = useNavigate()
     const [loading, setloading] = useState(false);
     const [listings, setlistings] = useState([]);
+    const [showMore, setshowMore] = useState(false);
     const [sidebarData, setsidebarData] = useState({
         searchTerm: '',
         type: 'all',
@@ -73,6 +74,11 @@ const SearchPage = () => {
                 const searchQuery = urlParams.toString()
                 const res = await axios.get(`/api/listing/searchlistings?${searchQuery}`)
                 const { data } = res;
+                if (data.length > 8) {
+                    setshowMore(true);
+                } else {
+                    setshowMore(false);
+                }
                 setlistings(data);
                 setloading(false)
             } catch (error) {
@@ -82,7 +88,21 @@ const SearchPage = () => {
         };
         fetchListing()
     }, [location.search]);
-    console.log(listings)
+
+    const onShowMoreClick = async () => {
+        const numberOfListings = listings.length;
+        const startIndex = numberOfListings
+        const urlParams = new URLSearchParams(location.search);
+        urlParams.set('startIndex', startIndex)
+        const searchQuery = urlParams.toString()
+        const res = await axios.get(`api/listing/searchlistings?${searchQuery}`)
+        const { data } = res;
+        if (data.length < 9) {
+            setshowMore(false);
+        }
+        setlistings([...listings, ...data])
+    }
+
     return (
         <div className="flex flex-col md:flex-row">
             <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen ">
@@ -153,7 +173,12 @@ const SearchPage = () => {
                     {!loading && listings.length > 0 && listings.map((listing) => (
                         <ListingCard key={listing._id} listing={listing} />
                     ))}
+
                 </div>
+                {showMore && (
+                    <button onClick={onShowMoreClick} className="hover:underline text-green-600 pb-6 w-full text-center">
+                        Show more</button>
+                )}
             </div>
         </div>
     )
