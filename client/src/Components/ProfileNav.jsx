@@ -5,7 +5,7 @@ import { LuView } from "react-icons/lu";
 
 const ProfileNav = () => {
     const { pathname } = useLocation();
-    function linkClasses(type = null) {
+    function linkClasses(type) {
         if (pathname === "/profile" || pathname === '/create-listing' || pathname === '/view-listings') {
             let classes = 'flex gap-1 items-center  h-10 '
             if (type === pathname) {

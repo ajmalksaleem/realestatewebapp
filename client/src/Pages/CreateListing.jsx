@@ -64,7 +64,7 @@ const CreateListing = () => {
             promises.push(storeImage(files[i]))
         }
         Promise.all(promises).then((urls) => {
-            setformData({ ...formData, ImageUrls: formData.ImageUrls.concat(urls) });         //https://g.co/bard/share/b854212a9bb1
+            setformData({ ...formData, ImageUrls: formData.ImageUrls.concat(urls) });         
             setUploading(false)
         })
             .catch((err) => {
@@ -265,7 +265,7 @@ const CreateListing = () => {
                                     type="number"
                                     id='regularPrice'
                                     min='50' max='1000000'
-                                    className='p-3 w-16 border border-gray-300'
+                                    className='p-1 py-2 w-20 border border-gray-300'
                                     onChange={handleChange}
                                     value={formData.regularPrice}
                                 />
@@ -280,7 +280,7 @@ const CreateListing = () => {
                                         type="number"
                                         id='discountPrice'
                                         min='1' max='10000'
-                                        className='p-3 w-16 border border-gray-300'
+                                        className='p-1 py-2 w-20 border border-gray-300'
                                         onChange={handleChange}
                                         value={formData.discountPrice}
                                     />

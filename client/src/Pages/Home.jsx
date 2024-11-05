@@ -71,7 +71,12 @@ const Home = () => {
                     delay: 3000,
                     disableOnInteraction: false,
                 }}
-
+                breakpoints={{
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 0,
+                    }
+                }}
                 className='my-10'>
                 {offerListing && offerListing.length > 0 && offerListing.map((offerlisting) => (
                     <SwiperSlide key={offerlisting._id}>

@@ -70,7 +70,6 @@ export const getListings = async (req, res, next) => {
         if (type === undefined || type === 'all') {
             type = { $in: ['rent', 'sale'] }
         };
-
         const searchTerm = req.query.searchTerm || '';
         const sort = req.query.sort || 'createdAt';
         const order = req.query.order || 'desc'
