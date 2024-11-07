@@ -5,6 +5,8 @@ import Axios from 'axios'
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import ProfileNav from '../Components/ProfileNav';
+import { FaRegStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 
 
 const CreateListing = () => {
@@ -152,6 +154,12 @@ const CreateListing = () => {
     }
 
 
+    const handleCover = (url, index) => {
+        const urlList = formData.ImageUrls.filter((u, i) => i !== index);
+        setformData({ ...formData, ImageUrls: [url, ...urlList] });
+      };
+
+
     return (
         <>
             {!listingId && <div className='max-w-lg mx-auto'>
@@ -295,8 +303,8 @@ const CreateListing = () => {
                         </div>
                     </div>
                     <div className='flex flex-col flex-1 ml-2 gap-4'>
-                        <p className='font-semibold'>Images:
-                            <span className='font-normal text-gray-700'> The first image will be the cover</span>
+                        <p className='font-semibold flex gap-2 items-center'>Images:
+                            <span className='font-normal text-gray-700 flex items-center gap-1'>The first image will be the cover / <FaStar /></span>
                         </p>
                         <div className='flex gap-4'>
                             <input onChange={e => setFiles(e.target.files)} type="file" id="" accept='image/*' multiple className='p-3 w-full border-gray-300 border' />
@@ -311,6 +319,7 @@ const CreateListing = () => {
                             formData.ImageUrls.length > 0 && formData.ImageUrls.map((url, index) => (
                                 <div key={url} className="flex justify-between p-2 border items-center">
                                     <img src={url} alt="nvn" className='w-20 h-20 object-contain rounded-lg' />
+                                    {index ===0 ? <FaStar size={23}/> : <FaRegStar size={23} onClick={()=>handleCover(url,index)}/> }
                                     <button onClick={(ev) => handleImageRemove(index)} className='bg-gray-500 p-3 rounded-lg text-white hover:bg-red-700' type='button'>DELETE</button>
                                 </div>
                             ))
